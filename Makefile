@@ -1,4 +1,4 @@
-APP = restapi
+APP = devops-restapi
 
 test:
 	@flake8 . --exclude .venv
@@ -13,5 +13,5 @@ down:
 
 heroku:
 	@heroku container:login
-	@heroku container:push -a devops-restapi web
-	@heroku container:release -a devops-restapi web
+	@heroku container:push -a $(APP) web
+	@heroku container:release -a $(APP) web

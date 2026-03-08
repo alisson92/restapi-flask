@@ -10,3 +10,8 @@ compose:
 
 down:
 	@docker compose down
+
+heroku:
+	@heroku container:login
+	@heroku container:push -a devops-restapi web
+	@heroku container:release -a devops-restapi web

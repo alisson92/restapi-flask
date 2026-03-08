@@ -10,8 +10,39 @@ class TestApplication():
         app = create_app('config.MockConfig')
         return app.test_client()
 
+    @pytest.fixture
+    def valid_user(self):
+        return {
+            "first_name": "Alisson",
+            "last_name": "Lima",
+            "cpf": "482.708.180-89",
+            "email": "alisson.lima@test.com.br",
+            "birth_date": "1992-03-10"
+            }
+
+    @pytest.fixture
+    def invalid_user(self):
+        return {
+            "first_name": "Alisson",
+            "last_name": "Lima",
+            "cpf": "482.708.180-88",
+            "email": "alisson.lima@test.com.br",
+            "birth_date": "1992-03-10"
+            }
+
     def test_get_users(self, client):
         with patch('application.app.UserModel.objects') as mock_objects:
             mock_objects.return_value = []
             response = client.get('/users')
             assert response.status_code == 200
+
+    def test_post_user(self, client, valid_user, invalid_user):
+        with patch('application.app.UserModel.save') as mock_save:
+            mock_save.return_value.id = "mock_id_123"
+            response = client.post('/user', json=valid_user)
+            assert response.status_code == 200
+            assert b"successfull" in response.data
+
+            response = client.post('/user', json=invalid_user)
+            assert response.status_code == 400
+            assert b"Invalid" in response.data

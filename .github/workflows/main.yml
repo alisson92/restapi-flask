@@ -27,6 +27,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Debug Environment
+        run: |
+          ls -R
+          which heroku || echo "Heroku CLI não encontrado"
+          cat Makefile
+
       - name: Deploy to Heroku
         run: make heroku
         env:
